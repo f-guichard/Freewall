@@ -1,0 +1,15 @@
+{
+    "name": "fguichard/logo-generator",
+    "description": "Top Ranking Ascii Art Logos",
+    "type": "project",
+    "license": "Gnu/GPLv2",
+    "authors": [
+        {
+            "name": "Fabien Guichard",
+            "email": "fabien.guichard@orange.com"
+        }
+    ],
+    "require": {
+        "monolog/monolog": "^2.1"
+    }
+}

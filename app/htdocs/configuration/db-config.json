@@ -1,0 +1,13 @@
+{
+    "database": {
+        "name": "freewall-legacy-db",
+        "driver": "MariaDB",
+        "db_name": "loggen_db",
+        "username": "loggen_user",
+        "password": "loggen_pass",
+        "server": "192.168.56.140",
+        "port": 3306,
+        "ViewNumRow": 50,
+        "connectionTimeout": 25
+    }
+  }

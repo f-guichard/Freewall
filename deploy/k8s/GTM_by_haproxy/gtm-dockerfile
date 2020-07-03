@@ -1,0 +1,21 @@
+FROM ubuntu:20.04
+
+LABEL org.opencontainers.image.authors="fabien.guichard@ftnetworks.tf"
+LABEL org.opencontainers.image.title="GTM Daemon"
+LABEL org.opencontainers.image.url="url de la registry"
+LABEL org.opencontainers.image.documentation="url du git"
+
+ENV PACKAGES="libcap2-bin netbase gdnsd netcat net-tools tcpdump curl"
+
+RUN apt-get update -y && apt-get install -y ${PACKAGES} \
+	&& apt-get autoremove -y && apt-get clean -y \
+	&& mkdir -p /etc/gdnsd/custoconf /var/run/gdnsd /etc/gdnsd/state \
+	&& chown gdnsd:gdnsd /var/run/gdnsd 
+
+RUN setcap 'cap_net_bind_service=+ep' /usr/sbin/gdnsd
+
+EXPOSE 53
+
+USER gdnsd
+
+ENTRYPOINT ["/usr/sbin/gdnsd","-f","-c","/etc/gdnsd/custoconf","start"]

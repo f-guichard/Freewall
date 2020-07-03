@@ -1,0 +1,12 @@
+---
+applications:
+  - name: ((app_name))
+    instances: ((app_instances))
+    memory: ((app_memory)) 
+    disk_quota: ((app_disk)) 
+    buildpacks: ((app_buildpack))
+    routes:
+    - route: ((app_name)).((cf_domain))
+    services: ((app_services))
+    path: ((app_source))
+    metadata: ((app_metadata))

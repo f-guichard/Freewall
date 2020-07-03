@@ -1,0 +1,6 @@
+{
+"WEBDIR": "htdocs",
+"WEB_SERVER": "httpd",
+"PHP_MODULES": [],
+"PHP_EXTENSIONS": ["mysqli"]
+}

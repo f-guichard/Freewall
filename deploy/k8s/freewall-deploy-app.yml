@@ -1,0 +1,75 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: freewall-application
+  labels:
+    app: freewall
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: freewall
+  template:
+    metadata:
+      labels:
+        app: freewall
+    spec:
+      securityContext:
+        runAsUser: 101
+        fsGroup: 101
+      containers:
+        - name: nginx
+          image: nginx-free:1.19
+          resources:
+            requests:
+              memory: "256M"
+              cpu: "200m"
+            limits:
+              memory: "256M"
+              cpu: "200m"
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /etc/nginx/conf.d
+              name: freewall-site-conf
+            - mountPath: /var/www/html
+              name: glusterfs-code
+              subPath: html
+            - mountPath: /var/cache/nginx
+              name: cache
+            - mountPath: /var/run
+              name: run
+        - name: phpfpm
+          image: php-free:7.4.7-fpm
+          resources:
+            requests:
+              memory: "256M"
+              cpu: "200m"
+            limits:
+              memory: "256M"
+              cpu: "200m"
+          ports:
+            - containerPort: 9000
+          imagePullPolicy: Always
+          volumeMounts:
+            - mountPath: /var/www/html
+              name: glusterfs-code
+              subPath: html
+      volumes:
+      - name: cache
+        emptyDir: {}
+      - name: run
+        emptyDir: {}
+      - name: freewall-site-conf
+        configMap:
+          name: freewall-nginx-site
+          items:
+            - key: freewall-site.conf
+              path: freewall-site.conf
+      - name: glusterfs-code
+        persistentVolumeClaim:
+            claimName: pvc-freewall
+      imagePullSecrets:
+        - name: regcred

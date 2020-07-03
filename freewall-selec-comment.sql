@@ -1,0 +1,1 @@
+SELECT distinct(comment) from (SELECT * FROM comments ORDER BY id DESC) toto LIMIT 10;

@@ -1,0 +1,10 @@
+---
+app_name: freewall
+app_buildpack: [ php_buildpack ]
+app_disk: 256M
+app_metadata: { annotations: { contact: "fabien.guichard@fnetworks.tf" }, labels: { deployment: "Hybridation" } }
+app_memory: 128M
+app_instances: 3
+app_services: [ db-k8s ]
+app_source: ../../app
+cf_domain: app.cloudfoundry.fnetworks.tf

@@ -1,0 +1,140 @@
+replicaCount: 1
+
+dependencies:
+- name: serviceatalog-maria-shared
+  version: 2.4.8
+  repository: https://k8s-catalog.fnetworks.tf/
+  condition: database.mariad.enabled
+
+image:
+  nginx:
+    repository: nginx-free
+    pullPolicy: Always
+    tag: "1.19"
+  phpfpm:
+    repository: php-free
+    pullPolicy: Always
+    tag: "7.4.7-fpm"
+
+ports:
+  nginx:
+    - containerPort: 8080
+  phpfpm:
+    - containerPort: 9000
+    
+imagePullSecrets:
+  - name: regcred
+  
+nameOverride: ""
+fullnameOverride: ""
+
+securityContext:
+  capabilities:
+    add:
+    - NET_BIND_SERVICE
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+
+service:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 80
+  - name: https
+    port: 443
+
+resources: 
+  nginx:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+  phpfpm:
+    limits:
+      cpu: 200m
+      memory: 256Mi
+    requests:
+      cpu: 200m
+      memory: 256Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
+  targetMemoryUtilizationPercentage: 50
+
+podAnnotations: {}
+
+podSecurityContext:
+  runAsUser: 101
+  fsGroup: 101
+
+volumeMounts:
+  nginx:
+    - mountPath: /etc/nginx/conf.d
+      name: freewall-site-conf
+    - mountPath: /var/www/html
+      name: glusterfs-code
+      subPath: html
+    - mountPath: /var/cache/nginx
+      name: cache
+    - mountPath: /var/run
+      name: run
+  phpfpm:
+    - mountPath: /var/www/html
+      name: glusterfs-code
+      subPath: html
+  ingress:
+    - mountPath: /etc/nginx/ssl_customs
+      name: certificates
+      readOnly: true
+    - mountPath: /etc/nginx/nginx.conf
+      name: ngninx-rconfig
+      subPath: nginx.conf
+      readOnly: true
+    - mountPath: /var/cache/nginx
+      name: cache
+    - mountPath: /var/log/nginx
+      name: log
+
+
+
+volumes:
+  application:
+    - name: cache
+      emptyDir: {}
+    - name: run
+      emptyDir: {}
+    - name: freewall-site-conf
+      configMap:
+        name: freewall-nginx-site
+        items:
+        - key: freewall-site.conf
+          path: freewall-site.conf
+    - name: glusterfs-code
+      persistentVolumeClaim:
+        claimName: pvc-freewall
+  ingress:
+    - name: certificates
+      secret:
+        secretName: freewall-certificates
+    - name: ngninx-rconfig
+      configMap:
+        defaultMode: 420
+        name: freewall-cm-nginx-lb
+        items:
+          - key: nginx.conf
+            path: nginx.conf
+    - name: cache
+      emptyDir: {}
+    - name: log
+      emptyDir: {}
+lb:
+  name: freewall-nginx-lb
+
+namespace: test

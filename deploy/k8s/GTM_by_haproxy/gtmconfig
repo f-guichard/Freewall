@@ -1,0 +1,38 @@
+options => {
+    log_stats => 86400
+    tcp_timeout => 15 ; zonefile-style comment
+    include_optional_ns => true
+    listen => [ 127.0.0.1 ]
+	run_dir => /var/run/gdnsd
+}
+
+# shell-style comment
+#service_types => {
+#    foosvc => { plugin => http_status, vhost => www.example.com, url_path => "/checkme" }
+#    barsvc => $include{bar-svc.cfg}
+#    $include{other-services.cfg}
+#}
+service_types => {
+	freewall => {
+		plugin => http_status
+		vhost => perdu.com
+		url_path => /healthcheck
+		down_thresh => 5
+		interval => 5
+	}
+	ext => {
+		plugin => extfile
+		file => /etc/gdnsd/state/ext
+		def_down => false
+	}
+}
+
+plugins => {
+  multifo => {
+    freewall => {
+      service_types => [ ext, freewall ]
+      addrs_v4 => [ 10.101.48.4, 10.101.48.7, 10.118.31.4, 10.118.127.4 ]
+      #addrs_v6 => [ 2001:db8::10.101.48.4, 2001:db8::10.101.48.7 ]
+    }
+  }
+}

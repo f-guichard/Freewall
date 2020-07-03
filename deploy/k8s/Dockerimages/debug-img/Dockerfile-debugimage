@@ -1,0 +1,12 @@
+FROM ubuntu:20.04
+
+LABEL org.opencontainers.image.authors="fguichard@fnetworks.tf"
+LABEL org.opencontainers.image.title="Debug Toolings"
+LABEL org.opencontainers.image.description="Image en soutien"
+LABEL org.opencontainers.image.url="url de la registry"
+LABEL org.opencontainers.image.documentation="url du git"
+
+ENV PACKAGES="mysql-client netcat net-tools tcpdump curl git nmap sysstat"
+
+RUN apt-get update -y && apt-get install -y ${PACKAGES} \
+	&& apt-get autoremove -y && apt-get clean -y

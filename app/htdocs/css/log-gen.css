@@ -1,0 +1,110 @@
+@charset "utf-8";
+html, body {
+    height: 100%;
+    
+}
+
+body {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: row;
+    background-color: rgba(235, 138, 12, 0.144);
+    /*background-image: linear-gradient(141deg, #000000e3 3%, #ddf509f1 51%, #000000e3 95%);*/
+    opacity: 0.90;
+}
+
+.input-comment {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.show-comments {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.freewall-input-comment {
+    width: 800px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.freewall-show-logo {
+    background-image: url("../images/freewall.jpg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+    border-radius: 100%;
+    border: 1px solid whitesmoke;
+    height: 250px;
+    width: 250px;
+}
+
+.input-text-bar {
+    margin: 30px 0;
+    position: relative;
+    width: auto;
+}
+
+.input-text-bar input {
+    height: 50px;
+    border: 1px solid rgb(206, 137, 34);
+    border-radius: 50px;
+    font-size: 18px;
+    padding: 0 50px;
+    outline: 0;
+    box-shadow: 0 0 0 0 rgba(0,0,0,0.3);
+    transition: box-shadow .3s;
+}
+
+.input-text-bar input:focus {
+    box-shadow: 0 0 20px -4px blue;
+}
+
+.save-button button {
+    background-color: transparent;
+    border-color: transparent;
+    border: none;
+}
+
+.save-button img {
+    height: 25px;
+    width: 25px;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.table-comments {
+    border-collapse: collapse; /* Evite un glitch via tr:hover lors du survol des cellules */
+    padding: 1px;
+}
+
+.table-comments table {
+    color: black;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-size: larger;
+}
+
+.table-comments table td {
+    padding: 5px;
+}
+
+@media screen and (max-width: 900px) {
+    body {
+        flex-direction: column;
+    }
+    .freewall-show-logo {
+        margin-left: 0;
+    }
+    .show-comments {
+        justify-content: start;
+    }
+}

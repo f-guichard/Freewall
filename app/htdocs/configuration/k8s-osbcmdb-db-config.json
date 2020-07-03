@@ -1,0 +1,13 @@
+{
+    "database": {
+        "name": "freewall-k8s-osbcmdb-db",
+        "driver": "MariaDB",
+        "db_name": "cf_0fc4503a_1a51_4f92_afc8_b581d954c199",
+        "username": "G4L4NGjmwBPNeFw5",
+        "password": "WDzHzzIxd2QANQIY",
+        "server": "10.118.42.190",
+        "port": 3306,
+        "ViewNumRow": 50,
+        "connectionTimeout": 30
+    }
+  }

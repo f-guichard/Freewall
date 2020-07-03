@@ -1,0 +1,7 @@
+variables:
+  CFY_API_ND1_C1_Z1: api.cloudfoundry.fnetworks.tf
+  CFY_ORG: test-org
+  CFY_SPACE: hybrid-apps
+  K8S_DEX: https://auth.kubernetes.fnetworks.tf/dex
+  K8S_AUTH: https://api.kubernetes.fnetworks.tf
+  K8S_NS: test-namespace

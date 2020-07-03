@@ -1,0 +1,51 @@
+version: '3.3'
+
+services:
+  nginxweb:
+    image: nginx:1.19
+    environment:
+      - INFRA=production
+      - INFRA_TYPE=docker-composer-3_3
+    ports:
+      - "8080:80"
+    volumes:
+      - "../../../app/htdocs:/var/www/html"
+      - "./freewall-site.conf:/etc/nginx/conf.d/freewall-site.conf"
+    networks:
+      loggen:
+        ipv4_address: 172.23.24.2
+    depends_on:
+      - phpfpm
+    links:
+      - phpfpm
+    restart: always
+
+  phpfpm:
+    image: php:7.4.7-fpm
+    volumes:
+      - "../../../app/htdocs:/var/www/html"
+    networks:
+      loggen:
+        ipv4_address: 172.23.24.3
+
+  db:
+    image: mysql:5.5.61
+    volumes:
+      - "/var/opt/mysql-loggen:/var/lib/mysql"
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=loggen_user
+      - MYSQL_PASSWORD=loggen_pass
+      - MYSQL_DATABASE=loggen_db
+    networks:
+      loggen:
+        ipv4_address: 172.23.24.4
+
+networks:
+    loggen:
+        ipam:
+            driver: default
+            config:
+                - subnet: 172.23.24.0/28

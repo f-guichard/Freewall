@@ -1,0 +1,66 @@
+
+include: [{local: deploy/cloud_vars.yml}]
+image: docker-images:cf
+
+stages:
+  - quality
+  - tests
+  - build-for-cloud
+  - deploy-to-cloud
+
+linter:php:
+  stage: quality
+  script: echo OK > linter_php
+  artifacts:
+    paths:
+      - linter_php
+  
+analyzer:sql:
+  stage: quality
+  script: echo OK > analyzer_sql
+  artifacts:
+    paths:
+      - analyzer_sql
+
+build_docker_freewall:app:
+  stage: build-for-cloud
+  script: echo 'build freewall docker image' > freewall_docker_build
+  artifacts:
+    paths:
+      - freewall_docker_build
+      
+build_docker_freewall:ingress:
+  stage: build-for-cloud
+  script: echo 'build ingress docker image' > ingress_docker_build
+  artifacts:
+    paths:
+      - ingress_docker_build
+
+deploy_to:aerofoundry:
+  stage: deploy-to-cloud
+  script:
+    - cf login -a  ${CFY_API_ND1_C1_Z1} --skip-ssl-validation -u ${CFY_USER} -p ${CFY_PASSWORD} -o ${CFY_ORG} -s ${CFY_SPACE}
+    - cf push -f deploy/cf/cf-manifest.yml --vars-file deploy/cf/deployment_vars.yml
+  tags:
+  - shared
+  - rsc
+  only:
+    refs:
+      - master
+    changes:
+      - app/*
+      - deploy/cf/*
+      
+deploy_to:metallikaas:
+  stage: deploy-to-cloud
+  script:
+  - echo 'helm upgrade --install ${RELEASE_NAME} deploy/k8s/charts/freewall-app'
+  tags:
+  - shared
+  - rsc
+  only:
+    refs:
+      - master
+    changes:
+      - app/*
+      - deploy/k8s/charts/*

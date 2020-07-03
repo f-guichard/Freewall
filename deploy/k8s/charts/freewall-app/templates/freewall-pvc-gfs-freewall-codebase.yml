@@ -1,0 +1,15 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-freewall
+spec:
+  volumeName: pv-freewall
+  accessModes:
+    - ReadWriteMany
+  storageClassName: manual
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 100Mi
+

@@ -1,0 +1,13 @@
+{
+    "database": {
+        "name": "freewall-k8s-db",
+        "driver": "MariaDB",
+        "db_name": "loggen_db",
+        "username": "loggen_user",
+        "password": "loggen_pass",
+        "server": "10.101.48.4",
+        "port": 22,
+        "ViewNumRow": 50,
+        "connectionTimeout": 30
+    }
+  }
